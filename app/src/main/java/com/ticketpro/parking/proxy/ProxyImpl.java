@@ -3493,6 +3493,7 @@ public class ProxyImpl implements Proxy {
             public void onComplete() {
                 observable5 = true;
                 sendCallbackForSync(callback);
+
             }
         });
         users.enqueue(new Callback<UserResponse>() {

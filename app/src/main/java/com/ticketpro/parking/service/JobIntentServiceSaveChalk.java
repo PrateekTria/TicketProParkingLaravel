@@ -170,7 +170,7 @@ public class JobIntentServiceSaveChalk extends JobIntentService {
             boolean uploadFlag = false;
             for (ChalkPicture ticketPicture : images) {
                 try {
-                    if (!ticketPicture.getImagePath().contains("VLPR")) {
+                  //  if (!ticketPicture.getImagePath().contains("VLPR")) {
                         // This code is changed by Prateek 5/4/2024
                         uploadFlag = TPUtility.uploadFile(ticketPicture.getImagePath(),
                                 TPConstant.FILE_UPLOAD + "/v1/common/uploadfile",
@@ -178,7 +178,7 @@ public class JobIntentServiceSaveChalk extends JobIntentService {
 
                         __updateChalkPictureImageStatus(ticketPicture.getPictureId(), citationNumber, uploadFlag);
 
-                    }
+                  //  }
 
                 } catch (Exception e) {
                     log.error(TPUtility.getPrintStackTrace(e));

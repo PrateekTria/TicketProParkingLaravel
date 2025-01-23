@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -84,6 +85,7 @@ public class PhotosActivity extends BaseActivityImpl {
             if (activeTicket == null) {
                 return;
             }
+
 
             TextView citationTextView = (TextView) findViewById(R.id.photos_citation_number_textview);
             citationTextView.setText("#" + TPUtility.prefixZeros(activeTicket.getCitationNumber(), 8));
@@ -167,34 +169,46 @@ public class PhotosActivity extends BaseActivityImpl {
                 sp.setTag(R.id.pictureIndex, index);
                 sp.setOnCheckedChangeListener((buttonView, isChecked) -> {
                     int pictureIndex = (Integer) buttonView.getTag(R.id.pictureIndex);
+                    TicketPicture ticketPicture = activeTicket.getTicketPictures().get(pictureIndex);
+                    ticketPicture.setPhotoSp(isChecked);
+
+                    // If the checkbox is checked, save the sticky state globally
+
+
                     if (isChecked) {
-                        TicketPicture ticketPicture = activeTicket.getTicketPictures().get(pictureIndex);
+                        // TicketPicture ticketPicture = activeTicket.getTicketPictures().get(pictureIndex);
                         ticketPicture.setPhotoSp(true);
-                        activeTicket.getTicketPictures().get(pictureIndex).setPhotoSp(true);
-                        picture.setPhotoSp(true);
                         //TPApp.getLastPhotos().add(ticketPicture);
-                        preference.putBoolean(TPConstant.PREFS_KEY_STICKY_PHOTO, true);
-                        TPApplication.getInstance().stickyPhoto = true;
+                        preference.putBoolean(TPConstant.PREFS_KEY_STICKY_PHOTO, TPApp.stickyPhoto);
+                        TPApplication.getInstance().stickyPhoto = isChecked;
+
+                        Log.d("photosp  select>>>>>>>>",ticketPicture.isPhotoSp()+"");
 
                     }else {
-                        if (!TPApp.getLastPhotos().isEmpty()) {
-                            TicketPicture ticketPicture = activeTicket.getTicketPictures().get(pictureIndex);
-                            ticketPicture.setPhotoSp(false);
-                            activeTicket.getTicketPictures().get(pictureIndex).setPhotoSp(false);
-                            picture.setPhotoSp(false);
-                            preference.putBoolean(TPConstant.PREFS_KEY_STICKY_PHOTO, false);
-                            TPApplication.getInstance().stickyPhoto = false;
-                            activeTicket.getTicketPictures().remove(pictureIndex);
-                        //    photosView.removeAllViews();
-                            displayPictures();
-                        }
+
+                        // Remove the picture from last photos (if necessary)
+//                            if (TPApp.getLastPhotos().contains(ticketPicture)) {
+//                                TPApp.getLastPhotos().remove(ticketPicture);
+//                            }
+
+                        TPApplication.getInstance().stickyPhoto = false;
+                        preference.putBoolean(TPConstant.PREFS_KEY_STICKY_PHOTO, TPApplication.getInstance().stickyPhoto);
+
+                        Log.d("photosp update >>>>>", ticketPicture.isPhotoSp() + "");
+
+                        // Optionally, remove all views and re-display the pictures to reflect changes
+                        photosView.removeAllViews();
+                        displayPictures();
+                        Log.d("photosp  un-select>>>>>>>>",ticketPicture.isPhotoSp()+"");
+
+
 
                     }
                 });
 
                 ImageView imgView = (ImageView) rowView.findViewById(R.id.photo_row_view_image);
                 try {
-                  //  File previewImg = new File(picture.getImagePath());
+                    //  File previewImg = new File(picture.getImagePath());
                     File previewImg = new File(activeTicket.getTicketPictures().get(index).getImagePath());
                     if (previewImg.exists()) {
                         sp.setVisibility(View.VISIBLE);
@@ -326,8 +340,7 @@ public class PhotosActivity extends BaseActivityImpl {
                                                     ArrayList<TicketPicture> tp = new ArrayList<>();
                                                     tp.add(picture);
                                                     CSVUtility.writePictureCSV(tp);
-                                                    CSVUtility.writeTicketCSV(activeTicket);
-                                                   // TPUtility.removeFile(picture.getImagePath());
+                                                    TPUtility.removeFile(picture.getImagePath());
                                                     TicketPicture.removePictureById(picture.getS_no());
                                                     ArrayList<TicketPicture> ticketPictures = TicketPicture.getTicketPicturesByCitation(activeTicket.getCitationNumber());
 
@@ -387,7 +400,7 @@ public class PhotosActivity extends BaseActivityImpl {
                         deletePicture.setVisibility(View.INVISIBLE);
                     } else {
                         if (Feature.isFeatureAllowed(Feature.PARK_STICKY_PHOTO)){
-                            if (!TPApp.getLastPhotos().isEmpty()){
+                            if (TPApp.getLastPhotos().size()>0){
                                 retakePicture.setVisibility(View.GONE);
                                 deletePicture.setVisibility(View.GONE);
                             }else {
@@ -457,7 +470,7 @@ public class PhotosActivity extends BaseActivityImpl {
                 }
             }
 
-            if (activeTicket.getTicketPictures().isEmpty()) {
+            if (activeTicket.getTicketPictures().size() == 0) {
                 backAction(null);
             }
 
@@ -502,15 +515,14 @@ public class PhotosActivity extends BaseActivityImpl {
                 try {
 
                     maxPhotos = Integer.parseInt(value);
-                  // This code has been changed by Prateek on 10/5/2024
-                    if (activeTicket.getTicketPictures().size() < maxPhotos ) {
-                        maxPhotos = maxPhotos + activeTicket.getPhotoCount();
+                    if (activeTicket.getPhoto_count() > 0) {
+                        maxPhotos = maxPhotos + activeTicket.getPhoto_count();
                     }
                     if (activeTicket.isLPR()) {
                         maxPhotos = maxPhotos + 1;
                     }
                 } catch (Exception e) {
-					e.printStackTrace();
+//					e.printStackTrace();
                 }
             }
 

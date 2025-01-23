@@ -292,14 +292,14 @@ public class JobIntentServiceSaveTicket extends JobIntentService {
             boolean uploadFlag = false;
             for (TicketPicture ticketPicture : images) {
                 try {
-                    if (!ticketPicture.getImagePath().contains("VLPR")) {
+                 //   if (!ticketPicture.getImagePath().contains("VLPR")) {
                         // This code is changed by Prateek 5/4/2024
                         uploadFlag = TPUtility.uploadFile(ticketPicture.getImagePath(),
                                 TPConstant.FILE_UPLOAD + "/v1/common/uploadfile",
                                 TPApplication.getInstance().getCustId());
                         __updateTicketPictureImageStatus(ticketPicture.getS_no(), citationNumber, uploadFlag);
 
-                    }
+                  //  }
 
                 } catch (Exception e) {
                     log.error(TPUtility.getPrintStackTrace(e));

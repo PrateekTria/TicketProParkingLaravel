@@ -7482,9 +7482,9 @@ public class WriteTicketActivity extends BaseActivityImpl implements MyTracker.A
         if (Feature.isFeatureAllowed(Feature.SAMTRANS) && TPApp.enableSamtrans) {
             _aListOfEnableService.add(Feature.SAMTRANS);
         }
-        if (Feature.isFeatureAllowed(Feature.PARK_GENETEC) && TPApp.enableGenetec) {
-            _aListOfEnableService.add(Feature.PARK_GENETEC);
-        }
+//        if (Feature.isFeatureAllowed(Feature.PARK_GENETEC) && TPApp.enableGenetec) {
+//            _aListOfEnableService.add(Feature.PARK_GENETEC);
+//        }
 
         if (_aListOfEnableService.size() > 1) {
 
@@ -7521,12 +7521,12 @@ public class WriteTicketActivity extends BaseActivityImpl implements MyTracker.A
                     intent.setClass(WriteTicketActivity.this, SamtransZoneActivity.class);
                     startActivity(intent);
                 }
-                else if (strName.equals(Feature.PARK_GENETEC) && TPApp.enableGenetec) {
-                    Intent i = new Intent();
-                    i.setClass(WriteTicketActivity.this, GenetecPatrollerActivity.class);
-                    startActivity(i);
-                    finish();
-                }
+//                else if (strName.equals(Feature.PARK_GENETEC) && TPApp.enableGenetec) {
+//                    Intent i = new Intent();
+//                    i.setClass(WriteTicketActivity.this, GenetecPatrollerActivity.class);
+//                    startActivity(i);
+//                    finish();
+//                }
             });
             AlertDialog dialog = builder.create();
             dialog.show();
@@ -7557,10 +7557,11 @@ public class WriteTicketActivity extends BaseActivityImpl implements MyTracker.A
             } else if (Feature.isFeatureAllowed(Feature.SAMTRANS) && TPApp.enableSamtrans) {
                 intent.setClass(WriteTicketActivity.this, SamtransZoneActivity.class);
                 startActivity(intent);
-            }else if (Feature.isFeatureAllowed(Feature.PARK_GENETEC) && TPApp.enableGenetec) {
-                intent.setClass(WriteTicketActivity.this, GenetecPatrollerActivity.class);
-                startActivity(intent);
             }
+//            else if (Feature.isFeatureAllowed(Feature.PARK_GENETEC) && TPApp.enableGenetec) {
+//                intent.setClass(WriteTicketActivity.this, GenetecPatrollerActivity.class);
+//                startActivity(intent);
+//            }
 
             else {
                 intent.setClass(this, ZoneListActivity.class);
