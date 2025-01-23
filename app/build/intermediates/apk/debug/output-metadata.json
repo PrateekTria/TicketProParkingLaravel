@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.ticketpro.parking",
+  "variantName": "debug",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 50,
+      "versionName": "6.0.7",
+      "outputFile": "TicketPro-Parking2025-v6.0.7-debug.apk"
+    }
+  ],
+  "elementType": "File"
+}
